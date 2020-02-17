@@ -6,6 +6,7 @@ import axios from "axios"
 import Navigation from '../component/Navigation';
 import RoutesHandler from '../component/RoutesHandler';
 import Users from './Users';
+import Missions from './Missions';
 import 'antd/dist/antd.css';
 import './App.css';
 
@@ -22,6 +23,11 @@ const routes = [
     title: 'Users',
     path: '/users',
     component: () => (<Users/>)
+  },
+  {
+    title: 'Missions',
+    path: '/missions',
+    component: () => (<Missions/>)
   },
 ].map(route => {
   route.path = '/admin' + route.path;

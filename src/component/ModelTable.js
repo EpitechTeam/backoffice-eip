@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter, Link } from 'react-router-dom';
 import { Table, Button, Icon, Divider, Popconfirm } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
@@ -22,6 +23,14 @@ class ModelTable extends Component {
 
   componentDidMount() {
     this.fetch();
+    this.unlistenHistory = this.props.history.listen(location => {
+      if (location.pathname.startsWith(`/admin/${this.props.model}`))
+        this.fetch();
+    });
+  }
+
+  componentWillUnmount() {
+    this.unlistenHistory();
   }
 
   handleTableChange = (pagination, filters, sorter) => {
@@ -41,6 +50,10 @@ class ModelTable extends Component {
 
   fetch = async (opts={}) => {
     this.setState({ loading: true });
+    const pathname = window.location.pathname.split('/').filter(Boolean);
+
+    if (pathname.length === 3)
+      opts._id = pathname.pop();
 
     const data = (await axios.get('/' + this.props.model, {
       params: {
@@ -82,6 +95,10 @@ class ModelTable extends Component {
     this.fetch();
   }
 
+  renderId = id => {
+    return <Link to={ `/admin/${this.props.model}/${id}`}>{id}</Link>
+  }
+
   render() {
     const formatDate = date => moment(date).format('YYYY-MM-DD HH:mm:ss');
 
@@ -108,16 +125,13 @@ class ModelTable extends Component {
           pagination={this.state.pagination}
           loading={this.state.loading}
           onChange={this.handleTableChange}
-          dataSource={ this.state.data.map(record => ({
-            ...record,
-            updatedAt: formatDate(record.updatedAt),
-            createdAt: formatDate(record.updatedAt)
-          }))}
+          dataSource={this.state.data}
         >
           <Column
             title="ID"
             dataIndex="_id"
             key="_id"
+            render={ renderModelId(this.props.model) }
           />
           {this.props.children}
           <Column
@@ -138,11 +152,13 @@ class ModelTable extends Component {
             title="Updated at"
             dataIndex="updatedAt"
             key="updatedAt"
+            render={ formatDate }
           />
           <Column
             title="Created at"
             dataIndex="createdAt"
             key="createdAt"
+            render={ formatDate }
           />
         </Table>
       </div>
@@ -150,4 +166,14 @@ class ModelTable extends Component {
   }
 }
 
-export default ModelTable;
+export default withRouter(props => <ModelTable {...props}/>);
+
+export const renderModelId = model => id => {
+  return <Link to={ `/admin/${model}/${id}` }>{ id }</Link>;
+};
+
+export const renderThumbnail = url => {
+  return url
+    ? <img src={ url } alt="thumbnail" style={{ maxHeight: '5em', maxWidth: '5em' }} />
+    : null;
+};

@@ -12,17 +12,15 @@ class Navigation extends Component {
 
   render() {
     const { location, routes } = this.props;
-
     const currentRoute = location.pathname.split('/').filter(Boolean)[1];
     const selectedRouteIndex = routes.findIndex(({ path }) => path.split('/').filter(Boolean)[1] === currentRoute);
-
 
     return (
       <Menu
         theme="dark"
         mode="horizontal"
         style={{ lineHeight: '64px' }}
-        defaultSelectedKeys={ [`${selectedRouteIndex}`] }
+        selectedKeys={ [`${selectedRouteIndex}`] }
       >
         { routes.map(this.renderMenuItem) }
       </Menu>

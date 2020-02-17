@@ -10,6 +10,7 @@ class RoutesHandler extends Component {
 
   render() {
     const path = this.props.location.pathname.split('/').filter(Boolean);
+    path.shift();
 
     return (
       <Fragment>
