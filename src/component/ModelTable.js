@@ -17,7 +17,7 @@ class ModelTable extends Component {
       pageSizeOptions: [ '5', '10', '25', '50', '100' ],
     },
     loading: false,
-    editionData: null
+    editionData: {}
   };
 
   componentDidMount() {
@@ -59,19 +59,22 @@ class ModelTable extends Component {
     });
   }
 
-  addRecord = () => this.setState({ editionData: {} });
+  addRecord = () => this.setState({ editionData: { values: {} } });
 
-  editRecord = record => this.setState({ editionData: record });
+  editRecord = record => this.setState({ editionData: { values: record } });
 
-  stopEdition = () => this.setState({ editionData: null });
+  stopEdition = () => this.setState({ editionData: {} });
 
   onSave = () => {
     this.stopEdition();
     this.fetch();
   }
 
-  handleUpdate = updates => {
-    this.setState({ editionData: { ...this.state.editionData, ...updates } });
+  handleUpdate = (updates, errors) => {
+    this.setState({ editionData: {
+      values: { ...this.state.editionData.values, ...updates },
+      errors: errors || this.state.editionData.errors,
+    }});
   };
 
   deleteRecord = async record => {

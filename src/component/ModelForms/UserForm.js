@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {
-  Form, Icon, Input
+  Form, Icon, Input, Select
 } from 'antd';
 import ModelForm from '../ModelForm';
+
+const Option = Select.Option;
 
 class UserForm extends Component {
 
@@ -11,8 +13,7 @@ class UserForm extends Component {
   }
 
   async componentDidMount() {
-    // this.handleRoleChange(this.props.data && this.props.data.type ? this.props.data.type : []);
-    await this.setState({ isNew: !this.props.form.getFieldValue('id') });
+    await this.setState({ isNew: !this.props.form.getFieldValue('_id') });
   }
 
   handleRoleChange = role => {
@@ -28,9 +29,7 @@ class UserForm extends Component {
     return (
       <Form className="login-form">
         <Form.Item>
-          {getFieldDecorator('firstname', {
-            rules: [{ required: true }],
-          })(
+          {getFieldDecorator('firstname')(
             <Input
               prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder="Firstname"
@@ -38,9 +37,7 @@ class UserForm extends Component {
           )}
         </Form.Item>
         <Form.Item>
-          {getFieldDecorator('lastname', {
-            rules: [{ required: true }],
-          })(
+          {getFieldDecorator('lastname')(
             <Input
               prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder="Lastname"
@@ -48,22 +45,33 @@ class UserForm extends Component {
           )}
         </Form.Item>
         <Form.Item>
-          {getFieldDecorator('email', {
-            rules: [{ required: true }],
-          })(
+          {getFieldDecorator('email')(
             <Input placeholder="Email" />
           )}
         </Form.Item>
         <Form.Item>
-          {getFieldDecorator('password')(
-            <Input
-              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type="password"
-              placeholder="Password"
-              disabled={!this.state.isNew}
-            />
+          {getFieldDecorator('type')(
+            <Select
+              mode="single"
+              style={{ width: '100%' }}
+              placeholder="Role"
+              onChange={ this.handleRoleChange }
+            >
+              { [ 'proprietaire', 'freelance', 'admin' ].map(role => (<Option key={role}>{role}</Option>)) }
+            </Select>
           )}
         </Form.Item>
+        { this.state.isNew ? (
+          <Form.Item>
+            {getFieldDecorator('password')(
+              <Input
+                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                type="password"
+                placeholder="Password"
+              />
+            )}
+          </Form.Item>
+        ) : null }
       </Form>
     );
   }
@@ -87,6 +95,8 @@ export default ModelForm(UserForm, user => {
 
   if (user.id) {
     delete user.password;
+  } else {
+    user.emailVerified = true;
   }
 
   return user;

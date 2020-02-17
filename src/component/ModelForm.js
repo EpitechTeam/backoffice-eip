@@ -7,20 +7,23 @@ export default (form, beforeSave) => ({
       if (!props.data)
         return null;
 
-      return Object.keys(props.data).reduce((acc, name) => ({
+      return [...Object.keys(props.data), ...Object.keys(props.errors)].reduce((acc, name) => ({
         ...acc,
-        [name]: Form.createFormField({ value: props.data[name] })
+        [name]: Form.createFormField({
+          value: props.data[name],
+          errors: props.errors[name] ? [new Error(props.errors[name].message)] : null
+        })
       }), {});
     },
 
     onFieldsChange(props, values) {
-      if (props.onUpdate) {
-        const updates = Object.keys(values).reduce((acc, key) => {
-          const { name, value } = values[key];
-          return  { ...acc, [name]: value }
-        }, {});
-        props.onUpdate(updates);
-      }
+      if (!props.onUpdate)
+        return;
+      const updates = Object.keys(values).reduce((acc, key) => {
+        const { name, value } = values[key];
+        return  { ...acc, [name]: value }
+      }, {});
+      props.onUpdate(updates);
     },
   })(form)
 });
