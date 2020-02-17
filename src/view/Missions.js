@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 import { Table } from 'antd';
-import ModelTable, { renderModelId, renderThumbnail } from '../component/ModelTable';
+import moment from 'moment';
+import ModelTable, { renderModelId, renderThumbnail, renderEnum, filterEnum } from '../component/ModelTable';
 import MissionForm from '../component/ModelForms/MissionForm';
 
 const { Column } = Table;
+
+const status = {
+  CURRENT: 'Current',
+  WAITING: 'Waiting',
+  DONE: 'Done',
+};
 
 class Misions extends Component {
 
@@ -41,6 +48,9 @@ class Misions extends Component {
           title="Status"
           dataIndex="status"
           key="status"
+          render={ renderEnum(status) }
+          filters={ filterEnum(status) }
+          filterMultiple={ false }
         />
         <Column
           title="Status number"
@@ -51,6 +61,7 @@ class Misions extends Component {
           title="Date"
           dataIndex="date"
           key="date"
+          sorter={ (a, b) => moment(a.date).format('YYYYMMDD') - moment(b.date).format('YYYYMMDD') }
         />
         <Column
           title="City"
@@ -67,6 +78,7 @@ class Misions extends Component {
           title="Deal"
           dataIndex="deal"
           key="deal"
+          sorter={ (a, b) => a.deal - b.deal }
         />
       </ModelTable>
     );

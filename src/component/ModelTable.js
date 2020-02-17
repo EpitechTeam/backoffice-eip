@@ -17,6 +17,8 @@ class ModelTable extends Component {
       defaultPageSize: 10,
       pageSizeOptions: [ '5', '10', '25', '50', '100' ],
     },
+    sorter: {},
+    filters: {},
     loading: false,
     editionData: {}
   };
@@ -34,24 +36,22 @@ class ModelTable extends Component {
   }
 
   handleTableChange = (pagination, filters, sorter) => {
-    const pager = { ...this.state.pagination };
-    pager.current = pagination.current;
-    this.setState({
-      pagination: pager,
-    });
-    this.fetch({
+    this.setState({ pagination, filters, sorter }, this.fetch)
+  }
+
+  fetch = async () => {
+    this.setState({ loading: true });
+
+    const { pagination, sorter, filters } = this.state;
+    const opts = {
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
       sortOrder: sorter.order,
       ...filters,
-    });
-  }
+    }
 
-  fetch = async (opts={}) => {
-    this.setState({ loading: true });
     const pathname = window.location.pathname.split('/').filter(Boolean);
-
     if (pathname.length === 3)
       opts._id = pathname.pop();
 
@@ -100,7 +100,7 @@ class ModelTable extends Component {
   }
 
   render() {
-    const formatDate = date => moment(date).format('YYYY-MM-DD HH:mm:ss');
+    const formatDate = date => date ? moment(date).format('YYYY-MM-DD HH:mm:ss') : null;
 
     return (
       <div>
@@ -176,4 +176,14 @@ export const renderThumbnail = url => {
   return url
     ? <img src={ url } alt="thumbnail" style={{ maxHeight: '5em', maxWidth: '5em' }} />
     : null;
+};
+
+export const renderEnum = enumValues => name => {
+  return enumValues[name];
+};
+
+export const filterEnum = enumValues => {
+  return Object.keys(enumValues).map(name => ({
+    text: enumValues[name], value: name
+  }));
 };

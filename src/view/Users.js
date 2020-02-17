@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import { Table } from 'antd';
-import ModelTable from '../component/ModelTable';
+import ModelTable, { renderEnum, filterEnum } from '../component/ModelTable';
 import UserForm from '../component/ModelForms/UserForm';
 
 const { Column } = Table;
+
+const types = {
+  proprietaire: 'Proprietaire',
+  freelance: 'Freelance',
+  admin: 'Admin',
+};
 
 class Users extends Component {
 
@@ -35,6 +41,9 @@ class Users extends Component {
           title="Role"
           dataIndex="type"
           key="type"
+          render={ renderEnum(types) }
+          filters={ filterEnum(types) }
+          filterMultiple={ false }
         />
       </ModelTable>
     );
