@@ -32,11 +32,11 @@ class ModelEditor extends Component {
 
   render() {
     const { form: ModelForm, beforeSave } = this.props.form;
-    const { _id } = this.props.data || {};
+    const { _id } = this.props.data.values || {};
 
     return (
       <Modal
-        title={ this.props.model.slice(0, -1) + (_id ? ' #' + _id : '')}
+        title={ (_id ? '' : 'New ') + this.props.model.slice(0, -1) + (_id ? ' #' + _id : '')}
         visible={ this.props.data.values != null }
         onOk={ () => this.onSave(beforeSave) }
         confirmLoading={ this.state.confirmLoading }

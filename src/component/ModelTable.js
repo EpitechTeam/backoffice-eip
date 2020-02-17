@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { Table, Button, Icon, Divider, Popconfirm } from 'antd';
+import { Table, Button, Icon, Divider, Popconfirm, Tag } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import ModelEditor from './ModelEditor';
@@ -169,7 +169,12 @@ class ModelTable extends Component {
 export default withRouter(props => <ModelTable {...props}/>);
 
 export const renderModelId = model => id => {
-  return <Link to={ `/admin/${model}/${id}` }>{ id }</Link>;
+  return id
+    ? (
+      <Link to={ `/admin/${model}/${id}` } title={ id }>
+        <Tag color={ '#' + id.slice(-6) }>#</Tag>{ id.slice(-6) }
+      </Link>
+    ) : null;
 };
 
 export const renderThumbnail = url => {
