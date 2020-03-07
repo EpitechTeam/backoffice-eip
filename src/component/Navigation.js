@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Menu } from 'antd';
+import { Menu, Icon } from 'antd';
 
 class Navigation extends Component {
 
@@ -9,6 +9,11 @@ class Navigation extends Component {
       <Link to={ path }>{ title }</Link>
     </Menu.Item>
   );
+
+  logout = () => {
+    localStorage.removeItem('token');
+    window.location.replace(process.env.REACT_APP_FRONT_URL);
+  }
 
   render() {
     const { location, routes } = this.props;
@@ -23,6 +28,9 @@ class Navigation extends Component {
         selectedKeys={ [`${selectedRouteIndex}`] }
       >
         { routes.map(this.renderMenuItem) }
+        <Menu.Item style={{ float: 'right' }}>
+          <Icon type="logout" onClick={ this.logout }/>
+        </Menu.Item>
       </Menu>
     );
   }
