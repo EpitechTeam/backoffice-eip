@@ -8,14 +8,6 @@ const Option = Select.Option;
 
 class UserForm extends Component {
 
-  state = {
-    isNew: true
-  }
-
-  async componentDidMount() {
-    await this.setState({ isNew: !this.props.form.getFieldValue('_id') });
-  }
-
   handleRoleChange = role => {
     if (!role)
       return;
@@ -61,7 +53,7 @@ class UserForm extends Component {
             </Select>
           )}
         </Form.Item>
-        { this.state.isNew ? (
+        { this.props.isNew ? (
           <Form.Item>
             {getFieldDecorator('password')(
               <Input

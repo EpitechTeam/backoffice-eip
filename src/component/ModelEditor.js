@@ -33,16 +33,17 @@ class ModelEditor extends Component {
   render() {
     const { form: ModelForm, beforeSave } = this.props.form;
     const { _id } = this.props.data.values || {};
+    const isNew = !_id;
 
     return (
       <Modal
-        title={ (_id ? '' : 'New ') + this.props.model.slice(0, -1) + (_id ? ' #' + _id : '')}
+        title={ (isNew ? 'New ' : '') + this.props.model.slice(0, -1) + (isNew ? '' : ' #' + _id)}
         visible={ this.props.data.values != null }
         onOk={ () => this.onSave(beforeSave) }
         confirmLoading={ this.state.confirmLoading }
         onCancel={ this.props.onCancel }
       >
-        <ModelForm onUpdate={ this.props.onUpdate } data={ this.props.data.values || {} } errors={ this.props.data.errors || {} } />
+        <ModelForm onUpdate={ this.props.onUpdate } data={ this.props.data.values || {} } errors={ this.props.data.errors || {} } isNew={ isNew } />
       </Modal>
     );
   }
