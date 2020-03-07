@@ -10,7 +10,7 @@ import Missions from './Missions';
 import 'antd/dist/antd.css';
 import './App.css';
 
-const { Header, Content } = Layout;
+const { Header, Content, Footer } = Layout;
 
 const routes = [
   {
@@ -38,16 +38,44 @@ class App extends Component {
 
   state = {
     ready: false,
+    profile: null
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     axios.defaults.baseURL = process.env.REACT_APP_API_URL + '/admin';
     axios.defaults.headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer ' + 'token'
+      'Authorization': 'Bearer ' + this.authenticate()
     };
-    this.setState({ ready: true });
+
+    const profile = (await axios.post(process.env.REACT_APP_API_URL + '/me')).data;
+    delete profile.tokens;
+    delete profile.password;
+    this.setState({
+      ready: true,
+      profile: {
+        ...profile,
+        fullname: `${profile.firstname} ${profile.lastname}`
+      }
+    });
+  }
+
+  authenticate() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.has('token')) {
+      localStorage.setItem('token', urlParams.get('token'));
+      window.parent.postMessage('token-stored', process.env.REACT_APP_FRONT_URL);
+    }
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      window.location.replace(process.env.REACT_APP_FRONT_URL + '/?login');
+    }
+
+    return token;
   }
 
   render() {
@@ -57,6 +85,7 @@ class App extends Component {
       left: '50%',
       transform: 'translate(-50%, -50%)'
     };
+    console.log(this.state);
 
     if (!this.state.ready)
       return (
@@ -73,33 +102,20 @@ class App extends Component {
       <Layout className="app">
         <Router>
           <Header className="app-header">
-            <div className="logo" />
-            <Menu
-              theme="dark"
-              mode="horizontal"
-              style={{ lineHeight: '64px' }}
-            >
             <Navigation routes={ routes } />
-            </Menu>
           </Header>
 
           <Content className="app-content">
             <RoutesHandler routes={ routes } />
           </Content>
+
+          <Footer className="app-footer">
+            Willally ©2019-{ (new Date).getFullYear() } - { this.state.profile.fullname }
+          </Footer>
         </Router>
       </Layout>
     );
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    authenticate: state.authenticate,
-    profile: state.profile
-  }
-};
-
-const mapDispatchToProps = dispatch => ({
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

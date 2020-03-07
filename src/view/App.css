@@ -1,6 +1,11 @@
-body, #root, .App {
+body, #root, .app {
   background-color: #f0f2f5;
   height: 100%;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
 }
 
 .app-header {
@@ -12,16 +17,12 @@ body, #root, .App {
 .app-content {
   padding: 0 50px;
   margin-top: 64px;
-  height: 100%;
-}
-
-.app-content-container {
-  background: white;
-  padding: 24px;
-  min-height: 380px;
-  height: 100%;
+  flex: 1 0 auto;
 }
 
 .app-footer {
   text-align: center;
+  flex-shrink: 0;
+  padding-top: 14px;
+  padding-bottom: 14px;
 }
