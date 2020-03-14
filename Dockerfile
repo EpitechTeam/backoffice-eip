@@ -22,4 +22,4 @@ COPY . /usr/src/app
 RUN npm run build
 
 # Main command
-CMD [ "npm", "serve" ]
+CMD [ "npm", "run", "serve" ]
