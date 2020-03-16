@@ -1,11 +1,11 @@
 import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, Select } from 'antd';
+import { Select } from 'antd';
 import FormInput from '../FormInput';
 
 const Option = Select.Option;
 
-function UserForm({ form, data, isNew }) {
+function UserForm({ form, isNew }) {
 
   const handleRoleChange = role => {
     if (!role)
@@ -15,7 +15,7 @@ function UserForm({ form, data, isNew }) {
   }
 
   return (
-    <Form labelCol={{ span: 4 }} form={ form } initialValues={ data }>
+    <React.Fragment>
       <FormInput
         name="firstname"
         prefix={<UserOutlined />}
@@ -42,7 +42,7 @@ function UserForm({ form, data, isNew }) {
           prefix={<LockOutlined />}
         />
       ) : null }
-    </Form>
+    </React.Fragment>
   );
 }
 

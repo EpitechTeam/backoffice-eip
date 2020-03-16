@@ -1,14 +1,19 @@
 import React from 'react';
-import { Form, Input } from 'antd';
 import FormInput from '../FormInput';
 
-function MissionForm({ form, data }) {
+function MissionForm() {
   return (
-    <Form labelCol={{ span: 4 }} form={ form } initialValues={ data }>
+    <React.Fragment>
+      <FormInput name="user_id" />
       <FormInput name="name" />
       <FormInput name="object" />
-    </Form>
+      <FormInput name="houseOwner" label="house owner" />
+      <FormInput name="date" />
+      <FormInput name="city" />
+      <FormInput name="img" label="image" />
+      <FormInput name="deal" />
+    </React.Fragment>
   );
-}
+};
 
 export default MissionForm;

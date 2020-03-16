@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, message } from 'antd';
+import { Modal, Form, message } from 'antd';
 import axios from 'axios';
 
 class ModelEditor extends Component {
@@ -45,7 +45,9 @@ class ModelEditor extends Component {
         confirmLoading={ this.state.confirmLoading }
         onCancel={ this.props.onCancel }
       >
-        <ModelForm form={ this.props.form } data={ this.props.data } isNew={ isNew } />
+        <Form labelCol={{ span: 6 }} form={ this.props.form } initialValues={ this.props.data }>
+          <ModelForm form={ this.props.form } isNew={ isNew } />
+        </Form>
       </Modal>
     );
   }
