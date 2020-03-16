@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Menu, Icon } from 'antd';
+import { LogoutOutlined } from '@ant-design/icons';
+import { Menu } from 'antd';
 
 class Navigation extends Component {
 
@@ -29,7 +30,7 @@ class Navigation extends Component {
       >
         { routes.map(this.renderMenuItem) }
         <Menu.Item style={{ float: 'right' }}>
-          <Icon type="logout" onClick={ this.logout }/>
+          <LogoutOutlined onClick={ this.logout } />
         </Menu.Item>
       </Menu>
     );

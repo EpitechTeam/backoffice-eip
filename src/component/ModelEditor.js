@@ -8,9 +8,11 @@ class ModelEditor extends Component {
     confirmLoading: false,
   }
 
-  onSave = async beforeSave => {
+  onSave = async () => {
     this.setState({ confirmLoading: true });
-    const { _id, ...data } = beforeSave ? beforeSave(this.props.data.values) : this.props.data.values;
+    const beforeSave = this.props.modelForm.beforeSave || (data => data);
+    const _id = this.props.data._id;
+    const data = beforeSave(await this.props.form.validateFields(), !_id);
 
     try {
       const newData = (_id
@@ -31,19 +33,19 @@ class ModelEditor extends Component {
   };
 
   render() {
-    const { form: ModelForm, beforeSave } = this.props.form;
-    const { _id } = this.props.data.values || {};
+    const ModelForm = this.props.modelForm;
+    const { _id } = this.props.data || {};
     const isNew = !_id;
 
     return (
       <Modal
         title={ (isNew ? 'New ' : '') + this.props.model.slice(0, -1) + (isNew ? '' : ' #' + _id)}
-        visible={ this.props.data.values != null }
-        onOk={ () => this.onSave(beforeSave) }
+        visible={ this.props.data != null }
+        onOk={ this.onSave }
         confirmLoading={ this.state.confirmLoading }
         onCancel={ this.props.onCancel }
       >
-        <ModelForm onUpdate={ this.props.onUpdate } data={ this.props.data.values || {} } errors={ this.props.data.errors || {} } isNew={ isNew } />
+        <ModelForm form={ this.props.form } data={ this.props.data } isNew={ isNew } />
       </Modal>
     );
   }

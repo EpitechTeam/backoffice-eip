@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import { Layout, Menu, Spin } from 'antd';
+import { Layout, Spin } from 'antd';
 import { BrowserRouter as Router } from "react-router-dom";
 import axios from "axios"
 import Navigation from '../component/Navigation';
@@ -85,7 +84,6 @@ class App extends Component {
       left: '50%',
       transform: 'translate(-50%, -50%)'
     };
-    console.log(this.state);
 
     if (!this.state.ready)
       return (
@@ -110,7 +108,7 @@ class App extends Component {
           </Content>
 
           <Footer className="app-footer">
-            Willally ©2019-{ (new Date).getFullYear() } - { this.state.profile.fullname }
+            Willally ©2019-{ (new Date()).getFullYear() } - { this.state.profile.fullname }
           </Footer>
         </Router>
       </Layout>

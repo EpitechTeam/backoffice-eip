@@ -1,72 +1,56 @@
-import React, { Component } from 'react';
-import {
-  Form, Icon, Input, Select
-} from 'antd';
-import ModelForm from '../ModelForm';
+import React from 'react';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Form, Input, Select } from 'antd';
 
 const Option = Select.Option;
 
-class UserForm extends Component {
+function UserForm({ form, data, isNew }) {
 
-  handleRoleChange = role => {
+  const handleRoleChange = role => {
     if (!role)
       return;
 
-    this.props.form.setFieldsValue({ type: role });
+    form.setFieldsValue({ type: role });
   }
 
-  render() {
-    const { getFieldDecorator } = this.props.form;
-
-    return (
-      <Form className="login-form">
-        <Form.Item>
-          {getFieldDecorator('firstname')(
-            <Input
-              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Firstname"
-            />
-          )}
+  return (
+    <Form form={ form } initialValues={ data }>
+      <Form.Item name="firstname">
+        <Input
+          prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+          placeholder="Firstname"
+        />
+      </Form.Item>
+      <Form.Item name="lastname">
+        <Input
+          prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+          placeholder="Lastname"
+        />
+      </Form.Item>
+      <Form.Item name="email">
+        <Input placeholder="Email" />
+      </Form.Item>
+      <Form.Item name="type">
+        <Select
+          mode="single"
+          style={{ width: '100%' }}
+          placeholder="Role"
+          onChange={ handleRoleChange }
+        >
+          { [ 'proprietaire', 'freelance', 'admin' ].map(role => (<Option key={role}>{role}</Option>)) }
+        </Select>
+      </Form.Item>
+      { isNew ? (
+        <Form.Item name="password">
+          <Input
+            prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+            type="password"
+            placeholder="Password"
+          />
         </Form.Item>
-        <Form.Item>
-          {getFieldDecorator('lastname')(
-            <Input
-              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Lastname"
-            />
-          )}
-        </Form.Item>
-        <Form.Item>
-          {getFieldDecorator('email')(
-            <Input placeholder="Email" />
-          )}
-        </Form.Item>
-        <Form.Item>
-          {getFieldDecorator('type')(
-            <Select
-              mode="single"
-              style={{ width: '100%' }}
-              placeholder="Role"
-              onChange={ this.handleRoleChange }
-            >
-              { [ 'proprietaire', 'freelance', 'admin' ].map(role => (<Option key={role}>{role}</Option>)) }
-            </Select>
-          )}
-        </Form.Item>
-        { this.props.isNew ? (
-          <Form.Item>
-            {getFieldDecorator('password')(
-              <Input
-                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                type="password"
-                placeholder="Password"
-              />
-            )}
-          </Form.Item>
-        ) : null }
-      </Form>
-    );
-  }
+      ) : null }
+    </Form>
+  );
 }
 
 function randomPassword(length) {
@@ -79,17 +63,19 @@ function randomPassword(length) {
     return password.join('');
 }
 
-export default ModelForm(UserForm, user => {
-  if (!user.id && !user.password) {
+UserForm.beforeSave = (user, isNew) => {
+  if (isNew && !user.password) {
     user.password = randomPassword(12);
     alert(`Password: "${user.password}" (it will only be displayed once)`);
   }
 
-  if (user.id) {
-    delete user.password;
-  } else {
+  if (isNew) {
     user.emailVerified = true;
+  } else {
+    delete user.password;
   }
 
   return user;
-});
+};
+
+export default UserForm;
