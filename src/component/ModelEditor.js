@@ -22,7 +22,12 @@ class ModelEditor extends Component {
       this.props.onSave(newData);
     } catch (error) {
       if (error.response && error.response.data) {
-        this.props.onUpdate({}, error.response.data);
+        const errors = error.response.data;
+        const errorFields = Object.keys(data).map(name => ({
+          name,
+          errors: errors[name] ? [errors[name].message] : []
+        }));
+        this.props.form.setFields(errorFields);
       } else if (error.message) {
         message.error(error.message);
       } else {
