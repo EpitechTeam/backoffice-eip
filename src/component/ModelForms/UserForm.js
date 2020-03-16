@@ -1,6 +1,7 @@
 import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Form, Input, Select } from 'antd';
+import { Form, Select } from 'antd';
+import FormInput from '../FormInput';
 
 const Option = Select.Option;
 
@@ -14,40 +15,32 @@ function UserForm({ form, data, isNew }) {
   }
 
   return (
-    <Form form={ form } initialValues={ data }>
-      <Form.Item name="firstname">
-        <Input
-          prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-          placeholder="Firstname"
-        />
-      </Form.Item>
-      <Form.Item name="lastname">
-        <Input
-          prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-          placeholder="Lastname"
-        />
-      </Form.Item>
-      <Form.Item name="email">
-        <Input placeholder="Email" />
-      </Form.Item>
-      <Form.Item name="type">
-        <Select
-          mode="single"
-          style={{ width: '100%' }}
-          placeholder="Role"
-          onChange={ handleRoleChange }
-        >
-          { [ 'proprietaire', 'freelance', 'admin' ].map(role => (<Option key={role}>{role}</Option>)) }
-        </Select>
-      </Form.Item>
+    <Form labelCol={{ span: 4 }} form={ form } initialValues={ data }>
+      <FormInput
+        name="firstname"
+        prefix={<UserOutlined />}
+      />
+      <FormInput
+        name="lastname"
+        prefix={<UserOutlined />}
+      />
+      <FormInput name="email" />
+      <FormInput
+        name="type"
+        label="role"
+        input={ Select }
+        mode="single"
+        style={{ width: '100%' }}
+        onChange={ handleRoleChange }
+      >
+        { [ 'proprietaire', 'freelance', 'admin' ].map(role => (<Option key={ role }>{ role }</Option>)) }
+      </FormInput>
       { isNew ? (
-        <Form.Item name="password">
-          <Input
-            prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
+        <FormInput
+          name="password"
+          type="password"
+          prefix={<LockOutlined />}
+        />
       ) : null }
     </Form>
   );

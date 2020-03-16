@@ -26,3 +26,7 @@ body, #root, .app {
   padding-top: 14px;
   padding-bottom: 14px;
 }
+
+form .anticon {
+  color: rgba(0, 0, 0, 0.25);
+}

@@ -1,15 +1,12 @@
 import React from 'react';
 import { Form, Input } from 'antd';
+import FormInput from '../FormInput';
 
 function MissionForm({ form, data }) {
   return (
-    <Form form={ form } initialValues={ data }>
-      <Form.Item name="name">
-        <Input placeholder="Name" />
-      </Form.Item>
-      <Form.Item name="object">
-        <Input placeholder="Object" />
-      </Form.Item>
+    <Form labelCol={{ span: 4 }} form={ form } initialValues={ data }>
+      <FormInput name="name" />
+      <FormInput name="object" />
     </Form>
   );
 }
