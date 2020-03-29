@@ -14,11 +14,12 @@ ENV NODE_ENV production
 ENV PUBLIC_PATH "/"
 
 # Install app dependencies
-COPY package.json /usr/src/app/
+COPY package.json .
+COPY package-lock.json .
 RUN npm install
 
 # Bundle app source and build it
-COPY . /usr/src/app
+COPY . .
 RUN npm run build
 
 # Main command

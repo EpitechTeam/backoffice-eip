@@ -1,0 +1,7 @@
+include:
+  - project: 'willally/stack'
+    file: '/gitlab-ci-templates/base.yml'
+  - project: 'willally/stack'
+    file: '/gitlab-ci-templates/build.yml'
+  - project: 'willally/stack'
+    file: '/gitlab-ci-templates/deploy.yml'
